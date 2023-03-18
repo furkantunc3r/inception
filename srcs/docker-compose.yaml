@@ -1,0 +1,35 @@
+version: "3.5"
+
+services:
+
+  mariadb:
+    container_name: 'mariadb'
+    build: ./requirements/mariadb/
+    networks:
+      - inception
+    restart: always
+  
+  wordpress:
+    container_name: 'wordpress'
+    build: ./requirements/wordpress/
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+    restart: always
+
+  nginx:
+    container_name: 'nginx'
+    build: ./requirements/nginx/
+    networks:
+      - inception
+    ports:
+      - 80:80
+    depends_on:
+      - wordpress
+    restart: always
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
