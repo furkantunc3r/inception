@@ -1,6 +1,17 @@
 FROM debian:buster
 
 RUN apt-get update
-RUN apt-get -y install php7.3 php-mysqli php-fpm
 
-CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
+RUN apt-get -y install php7.3 php-mysqli php-fpm mariadb-client
+
+RUN apt-get install curl -y; \
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar; \
+    chmod +x wp-cli.phar; \
+    mv wp-cli.phar /usr/local/bin/wp
+
+RUN mkdir -p /var/www/html
+
+COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY tools/wpinstall.sh /
+
+CMD bash 'wpinstall.sh'; 'bash'

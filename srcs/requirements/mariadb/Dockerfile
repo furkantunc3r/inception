@@ -1,8 +1,10 @@
 FROM debian:buster
 
-RUN apt-get update
-RUN apt-get install -y mariadb-server
+RUN apt-get update; \
+    apt-get install -y mariadb-server
 
-RUN service mysql start
+COPY /tools/startdb.sh /
 
-CMD ["mysqld"]
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+
+CMD bash 'startdb.sh'; 'bash'
